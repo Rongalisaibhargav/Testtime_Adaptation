@@ -58,9 +58,9 @@ def preprocessing(text):
 class VQAv2Dataset(Dataset):
     IMAGE_PATH = {
         "train": ("train2014","v2_OpenEnded_mscoco_train2014_questions.json", "v2_mscoco_train2014_annotations.json","train2014"),
-        "val": ("val2014","v2_OpenEnded_mscoco_val2014_questions.json", "v2_mscoco_val2014_annotations.json","val2014"),
+        "val": ("val2014","v2_OpenEnded_mscoco_val2014_phrases.json", "v2_mscoco_val2014_annotations.json","val2014"),
         "train_ab": ("train2015","OpenEnded_abstract_v002_train2015_questions.json", "abstract_v002_train2015_annotations.json","train2015"),
-        "val_ab": ("val2015","OpenEnded_abstract_v002_val2015_questions.json", "abstract_v002_val2015_annotations.json","val2015"),
+        "val_ab": ("val2015","OpenEnded_abstract_v002_val2015_phrases.json", "abstract_v002_val2015_annotations.json","val2015"),
         "testdev": ("test2015", "v2_OpenEnded_mscoco_test-dev2015_questions.json"),
         "test": ("test2015", "v2_OpenEnded_mscoco_test2015_questions.json"),
         "train_gqa":("images","train_balanced_questions.json"),
@@ -76,6 +76,7 @@ class VQAv2Dataset(Dataset):
         self.split = split
         # path to the root folder of the dataset
         self.root = root
+        self.vocab={}
         # dataset name : VQAv2, VQA Ab, GQA and VG
         self.dataset = dataset
         self.transform = transform
@@ -93,9 +94,13 @@ class VQAv2Dataset(Dataset):
                     df["image_path"] = df["image_id"].apply(
                         lambda x: f"{self.IMAGE_PATH[split][0]}/abstract_v002_{self.IMAGE_PATH[split][3]}_{x:012d}.png")
             path = os.path.expanduser(os.path.join(root, self.IMAGE_PATH[split][2]))
+            # print(df.keys())
             with open(path, 'r') as f:
                         data = json.load(f)
             df_annotations = pd.DataFrame(data["annotations"])
+            # pattern = r"(.*?)<answer>(.*?)| "
+            # df = df[df['phrase'].str.contains(pattern, regex=True, na=False)]
+            # print(df['phrase'][:10])
             i=0
             vocab_path = '/raid/biplab/hassan/VQA_CLIP/vqa_common_ab.txt'
             with open(vocab_path, 'r') as file:
@@ -113,6 +118,7 @@ class VQAv2Dataset(Dataset):
             #    print(df_annotations)
             df = pd.merge(df, df_annotations, left_on='question_id', right_on='question_id', how='right')
             df["image_id"] = df["image_id_x"]
+            df =df[df['image_id_y'] == df['image_id_x']].reset_index()
             if not all(df["image_id_y"] == df["image_id_x"]):
                         print("There is something wrong with image_id")
             del df["image_id_x"]
@@ -186,14 +192,17 @@ class VQAv2Dataset(Dataset):
     def __getitem__(self, index):
         image_path = self.df["image_path"][index]
         question = self.df["question"][index]
+        phrase = self.df["phrase"][index]
+        ans = self.df["answers"][index]
+        # test_phrases= []
         if self.dataset == 'VQAv2' or self.dataset == 'VQAab':
-            selected_answers = self.selection(self.df["answers"][index])
+            selected_answers = self.selection(ans)
         else: 
-            selected_answers = self.df["answers"][index]
+            selected_answers = ans     
         image_path = os.path.expanduser(os.path.join(self.root, image_path))
         img = Image.open(image_path).convert('RGB')
         img = preprocess(img)
-        answer = torch.tensor(self.vocab[selected_answers])
-        return {"img": img, "question": question, "answer": answer}
+        answer = selected_answers
+        return {"img": img, "question": question, "answer": answer, "phrase": phrase}
     def __len__(self):
         return len(self.df["answers"])
