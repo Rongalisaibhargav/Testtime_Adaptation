@@ -7,6 +7,9 @@ from tqdm import tqdm
 from transformers import AutoModelWithLMHead, AutoTokenizer
 import os
 import re
+import clip
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model, preprocess = clip.load("ViT-B/32", device=device)
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 # tokenizer = T5Tokenizer.from_pretrained("google-t5/t5-small")
@@ -45,7 +48,7 @@ train_transform = transforms.Compose([
 
 # input_ids = tokenizer("translate English to German: The house is wonderful.", return_tensors="pt").input_ids
 
-val_dataset = VQAv2Dataset('/raid/biplab/hassan/datasets/vqa_abs','val_ab','VQAab',transform=train_transform)
+val_dataset = VQAv2Dataset('/raid/biplab/hassan/datasets/vqa_v2','val','VQAv2',transform=train_transform)
 val_loader = DataLoader(val_dataset, num_workers=num_workers, batch_size=batch_size, shuffle=False)
 def generate_yes_no_phrases(phrase):
         # print(phrase)
@@ -64,13 +67,16 @@ def generate_yes_no_phrases(phrase):
 condition = lambda x: x=='yes' | x=='no'
 i=0
 vocab={}
+reverse ={}
 vocab_path = '/raid/biplab/hassan/VQA_CLIP/vqa_common_ab.txt'
 with open(vocab_path, 'r') as file:
     for line in file:
         line = line.replace('\n','')
         vocab[line]=i
+        reverse[i]=line
         i+=1
-count=0
+correct=0
+total=0
 for data in tqdm(val_loader):
     # print(data.keys())
     # if count>10:
@@ -78,6 +84,9 @@ for data in tqdm(val_loader):
     img = data["img"]
     ques = data["phrase"]
     ans = data["answer"]
+    img = img.to('cuda')
+    with torch.no_grad():
+                image_features = model.encode_image(img)
     # ind = data["answer"] 
     
     if ans[0]=='yes' or ans[0]=='no':
@@ -89,9 +98,36 @@ for data in tqdm(val_loader):
             phrases=[]
             for c in vocab.keys():
                 phrases.append(ques[0].replace("<answer>",c))
-    # print(phrases)
+    try:
+        inputs = clip.tokenize(phrases).to(device)
+        with torch.no_grad():
+            image_features = model.encode_image(img)
+            text_features = model.encode_text(inputs)
+        # print(image_features.shape)
+        # print(text_features.shape)
+        result = torch.mm(image_features,text_features.t())
+        out =  torch.argmax(result,dim=1).cpu().item()
+        conv ={}
+        total+=1
+        conv[0]="yes"
+        conv[1]="no"
+        if ans[0]=='yes' or ans[0]=='no':
+            if conv[out]==ans[0]:
+                correct+=1
+        else: 
+            # print(ques)
+            # print(ans[0])
+            # print(reverse[out])
+            if out == vocab[ans[0]]:
+                correct+=1
+        if total%100==0:
+            print("Accuracy ",correct/total)
+    except Exception as e:
+        continue
+    # if total%9==0:
+    #     break
     # print("-------------------------------------------")
-    count+=1
+    # count+=1
 
 
 
