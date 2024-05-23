@@ -13,13 +13,16 @@ pipeline = transformers.pipeline(
     torch_dtype=torch.float16,
     device_map="cuda:1",
 )
-path = '/raid/biplab/hassan/datasets/vqa_abs/OpenEnded_abstract_v002_val2015_questions.json'
+# /raid/biplab/hassan/datasets/vqa_abs/OpenEnded_abstract_v002_val2015_questions.json
+# /raid/biplab/hassan/datasets/vqa_v2/v2_OpenEnded_mscoco_val2014_questions.json
+path = '/raid/biplab/hassan/datasets/vqa_v2/v2_OpenEnded_mscoco_val2014_questions.json'
 with open(path, 'r') as f:
             data = json.load(f)
 lists =[]
 count=0
 quid_skip=[]
-for ques in tqdm(data["questions"]):
+for ques in tqdm(data["questions"][:500]):
+    # print(count)
     # if count>30:
     #       break
     refined_ques={}
@@ -50,13 +53,18 @@ for ques in tqdm(data["questions"]):
     # match = re.search(r'Phrase:\s*(.*)', strs, re.DOTALL)
     match = re.findall(r'Assistant:\s*Phrase:\s*(.*)', strs)
     if match:
-        refined_ques["phrase"] = match[0]
+        # print("yes")
+        m = match[0]
+        if len(m.split(" "))>30:
+             continue
+        refined_ques["phrase"] = m
         refined_ques["question"]= ques["question"]
         refined_ques["question_id"]= ques["question_id"]
         refined_ques["image_id"] = ques["image_id"]
         lists.append(refined_ques)
         count+=1
     else:
+        # print("No")
         quid_skip.append(ques["question_id"])
         continue
 
@@ -70,7 +78,7 @@ for ques in tqdm(data["questions"]):
 # print(strs)
 question_final ={}
 question_final["questions"]=lists
-file_path = 'OpenEnded_abstract_v002_val2015_phrases.json'
+file_path = 'v2_OpenEnded_mscoco_val2014_phrases.json'
 print("questions_skipped ",quid_skip)
 # Dump the dictionary to a JSON file
 with open(file_path, 'w') as json_file:
