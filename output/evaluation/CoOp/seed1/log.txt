@@ -1,0 +1,559 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/CoOp/vit_b16_ep50.yaml
+dataset_config_file: configs/datasets/vqav2.yaml
+eval_only: False
+head: 
+no_train: False
+opts: []
+output_dir: output/evaluation/CoOp/seed1
+resume: 
+root: /raid/biplab/hassan/datasets/vqa_abs
+seed: 1
+set: VQAab
+split: val_ab
+tpt: True
+trainer: CoOp
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  DATA: VQAab
+  NAME: VQAv2
+  NUM_LABELED: -1
+  NUM_SHOTS: -1
+  ROOT: /raid/biplab/hassan/datasets/vqa_abs
+  SET: VQAab
+  SOURCE_DOMAINS: ()
+  SPLIT: val_ab
+  STL10_FOLD: -1
+  SUBSAMPLE_CLASSES: all
+  TARGET_DOMAINS: ()
+  TPT: eurosat
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: ViT-B/32
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: output/evaluation/CoOp/seed1
+RESUME: 
+SEED: 1
+TEST:
+  COMPUTE_CMAT: False
+  EVALUATOR: Classification
+  FINAL_MODEL: last_step
+  NO_TEST: False
+  PER_CLASS_RESULT: False
+  SPLIT: test
+TPT:
+  LOADER: True
+  LR: 0.04
+  RUN: True
+  TTA_STEPS: 1
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CDAC:
+    CLASS_LR_MULTI: 10
+    P_THRESH: 0.95
+    RAMPUP_COEF: 30
+    RAMPUP_ITRS: 1000
+    STRONG_TRANSFORMS: ()
+    TOPK_MATCH: 5
+  COOP:
+    CTX_INIT: A photo of
+    N_CTX: 1
+    PREC: fp32
+  CROSSGRAD:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DAELDG:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  DOMAINMIX:
+    ALPHA: 1.0
+    BETA: 1.0
+    TYPE: crossdomain
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MAPLE:
+    CTX_INIT: The answer is 
+    N_CTX: 3
+    PREC: fp32
+    PROMPT_DEPTH: 9
+  MCD:
+    N_STEP_F: 4
+  MEANTEACHER:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: CoOp
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 1.13.0+cu117
+Is debug build: False
+CUDA used to build PyTorch: 11.7
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 22.04.2 LTS (x86_64)
+GCC version: (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+Clang version: Could not collect
+CMake version: version 3.22.1
+Libc version: glibc-2.35
+
+Python version: 3.8.19 (default, Mar 20 2024, 19:58:24)  [GCC 11.2.0] (64-bit runtime)
+Python platform: Linux-5.15.0-1029-nvidia-x86_64-with-glibc2.17
+Is CUDA available: True
+CUDA runtime version: Could not collect
+CUDA_MODULE_LOADING set to: LAZY
+GPU models and configuration: 
+GPU 0: NVIDIA A100-SXM4-80GB
+GPU 1: NVIDIA A100-SXM4-80GB
+GPU 2: NVIDIA A100-SXM4-80GB
+GPU 3: NVIDIA A100-SXM4-80GB
+GPU 4: NVIDIA A100-SXM4-80GB
+GPU 5: NVIDIA A100-SXM4-80GB
+GPU 6: NVIDIA A100-SXM4-80GB
+GPU 7: NVIDIA A100-SXM4-80GB
+
+Nvidia driver version: 535.54.03
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+Versions of relevant libraries:
+[pip3] numpy==1.24.4
+[pip3] torch==1.13.0+cu117
+[pip3] torchaudio==0.13.0+cu117
+[pip3] torchvision==0.14.0+cu117
+[conda] numpy                     1.24.4                   pypi_0    pypi
+[conda] torch                     1.13.0+cu117             pypi_0    pypi
+[conda] torchaudio                0.13.0+cu117             pypi_0    pypi
+[conda] torchvision               0.14.0+cu117             pypi_0    pypi
+        Pillow (10.3.0)
+
+Loading trainer: CoOp
+Loading dataset: VQAv2
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000027578.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000027578.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000027578.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000021768.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000021768.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000021768.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000025506.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000025506.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000025506.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000025841.png
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Building transform_test
++ resize the smaller edge to 224
++ 224x224 center crop
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  -----
+Dataset    VQAv2
+# classes  352
+# train_x  10
+# val      10
+# test     10
+---------  -----
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000027578.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000027578.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000027578.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000021768.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000021768.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000021768.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000025506.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000025506.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000025506.png
+/raid/biplab/hassan/datasets/vqa_abs/val2015/abstract_v002_val2015_000000025841.png
+Loading CLIP (backbone: ViT-B/32)
+Building custom CLIP
+Initial context: "X"
+Number of MaPLe context words (tokens): 1
+Turning off gradients in both the image and the text encoder
+Loading evaluator: Classification
+Re-updating prompt initializations to current prompts.
+Parameters to be updated: {'prompt_learner.ctx'}
+=> Using native Torch AMP. Training in mixed precision.
+number of test samples: 28634
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+Test: [  199/28634]	Time  0.467 ( 0.276)	Acc@1   0.00 ( 31.84)	Acc@5   0.00 ( 51.96)
+Correct  1  total  87
+Test: [  599/28634]	Time  0.437 ( 0.266)	Acc@1   0.00 ( 28.71)	Acc@5   0.00 ( 51.33)
+Correct  3  total  259
+Test: [  799/28634]	Time  0.069 ( 0.261)	Acc@1 100.00 ( 29.33)	Acc@5 100.00 ( 51.93)
+Correct  3  total  340
+Test: [  999/28634]	Time  0.057 ( 0.260)	Acc@1   0.00 ( 28.47)	Acc@5 100.00 ( 51.71)
+Correct  3  total  430
+Test: [ 1199/28634]	Time  0.046 ( 0.261)	Acc@1 100.00 ( 28.31)	Acc@5 100.00 ( 51.33)
+Correct  4  total  522
+Test: [ 1599/28634]	Time  0.062 ( 0.257)	Acc@1   0.00 ( 28.22)	Acc@5 100.00 ( 51.86)
+Correct  4  total  681
+Test: [ 1999/28634]	Time  0.442 ( 0.257)	Acc@1   0.00 ( 28.03)	Acc@5   0.00 ( 51.77)
+Correct  6  total  845
+Test: [ 2199/28634]	Time  0.054 ( 0.261)	Acc@1 100.00 ( 27.08)	Acc@5 100.00 ( 50.50)
+Correct  6  total  957
+Test: [ 2399/28634]	Time  0.044 ( 0.263)	Acc@1 100.00 ( 27.13)	Acc@5 100.00 ( 50.05)
+Correct  7  total  1055
+Test: [ 2599/28634]	Time  0.043 ( 0.262)	Acc@1   0.00 ( 26.82)	Acc@5 100.00 ( 50.15)
+Correct  7  total  1141
+Test: [ 2799/28634]	Time  0.062 ( 0.263)	Acc@1 100.00 ( 26.71)	Acc@5 100.00 ( 49.67)
+Correct  8  total  1238
+Test: [ 3199/28634]	Time  0.437 ( 0.262)	Acc@1   0.00 ( 26.88)	Acc@5   0.00 ( 49.84)
+Correct  9  total  1411
+Test: [ 3399/28634]	Time  0.055 ( 0.263)	Acc@1   0.00 ( 26.93)	Acc@5 100.00 ( 49.76)
+Correct  10  total  1504
+Test: [ 3599/28634]	Time  0.485 ( 0.262)	Acc@1   0.00 ( 27.03)	Acc@5   0.00 ( 49.95)
+Correct  10  total  1591
+Test: [ 3799/28634]	Time  0.047 ( 0.261)	Acc@1   0.00 ( 27.18)	Acc@5 100.00 ( 49.98)
+Correct  11  total  1680
+Test: [ 3999/28634]	Time  0.435 ( 0.260)	Acc@1   0.00 ( 27.03)	Acc@5   0.00 ( 50.19)
+Correct  11  total  1760
+Test: [ 4199/28634]	Time  0.460 ( 0.261)	Acc@1   0.00 ( 26.89)	Acc@5   0.00 ( 50.04)
+Correct  12  total  1853
+Test: [ 4399/28634]	Time  0.046 ( 0.261)	Acc@1 100.00 ( 27.03)	Acc@5 100.00 ( 50.05)
+Correct  13  total  1944
+Test: [ 4599/28634]	Time  0.515 ( 0.261)	Acc@1   0.00 ( 26.87)	Acc@5   0.00 ( 49.93)
+Correct  13  total  2038
+Test: [ 4799/28634]	Time  0.443 ( 0.260)	Acc@1   0.00 ( 26.90)	Acc@5   0.00 ( 50.13)
+Correct  13  total  2118
+Test: [ 4999/28634]	Time  0.062 ( 0.260)	Acc@1   0.00 ( 26.88)	Acc@5 100.00 ( 50.24)
+Correct  13  total  2201
+Test: [ 5199/28634]	Time  0.503 ( 0.259)	Acc@1   0.00 ( 27.12)	Acc@5   0.00 ( 50.40)
+Correct  13  total  2281
+Test: [ 5399/28634]	Time  0.441 ( 0.259)	Acc@1   0.00 ( 27.02)	Acc@5   0.00 ( 50.46)
+Correct  14  total  2366
+Test: [ 5599/28634]	Time  0.064 ( 0.259)	Acc@1 100.00 ( 27.06)	Acc@5 100.00 ( 50.51)
+Correct  15  total  2449
+Test: [ 5799/28634]	Time  0.484 ( 0.259)	Acc@1   0.00 ( 27.00)	Acc@5   0.00 ( 50.41)
+Correct  15  total  2542
+Test: [ 5999/28634]	Time  0.045 ( 0.260)	Acc@1 100.00 ( 26.93)	Acc@5 100.00 ( 50.31)
+Correct  15  total  2632
+Test: [ 6199/28634]	Time  0.048 ( 0.259)	Acc@1 100.00 ( 26.92)	Acc@5 100.00 ( 50.34)
+Correct  15  total  2717
+Test: [ 6399/28634]	Time  0.523 ( 0.260)	Acc@1   0.00 ( 26.95)	Acc@5   0.00 ( 50.37)
+Correct  16  total  2804
+Test: [ 6599/28634]	Time  0.456 ( 0.259)	Acc@1   0.00 ( 26.93)	Acc@5   0.00 ( 50.36)
+Correct  16  total  2893
+Test: [ 6799/28634]	Time  0.047 ( 0.260)	Acc@1   0.00 ( 26.76)	Acc@5 100.00 ( 50.29)
+Correct  16  total  2982
+Test: [ 7199/28634]	Time  0.047 ( 0.259)	Acc@1 100.00 ( 26.85)	Acc@5 100.00 ( 50.37)
+Correct  16  total  3150
+Test: [ 7399/28634]	Time  0.466 ( 0.259)	Acc@1   0.00 ( 26.92)	Acc@5   0.00 ( 50.47)
+Correct  18  total  3232
+Test: [ 7799/28634]	Time  0.046 ( 0.258)	Acc@1 100.00 ( 26.91)	Acc@5 100.00 ( 50.58)
+Correct  18  total  3397
+Test: [ 7999/28634]	Time  0.054 ( 0.258)	Acc@1 100.00 ( 26.97)	Acc@5 100.00 ( 50.72)
+Correct  18  total  3473
+Test: [ 8199/28634]	Time  0.059 ( 0.258)	Acc@1   0.00 ( 27.03)	Acc@5 100.00 ( 50.74)
+Correct  18  total  3555
+Test: [ 8399/28634]	Time  0.437 ( 0.259)	Acc@1   0.00 ( 26.80)	Acc@5   0.00 ( 50.46)
+Correct  18  total  3664
+Test: [ 8599/28634]	Time  0.445 ( 0.259)	Acc@1   0.00 ( 26.75)	Acc@5   0.00 ( 50.41)
+Correct  21  total  3755
+Test: [ 8799/28634]	Time  0.460 ( 0.259)	Acc@1   0.00 ( 26.80)	Acc@5   0.00 ( 50.38)
+Correct  21  total  3843
+Test: [ 9199/28634]	Time  0.498 ( 0.259)	Acc@1   0.00 ( 26.83)	Acc@5   0.00 ( 50.44)
+Correct  22  total  4014
+Test: [ 9399/28634]	Time  0.058 ( 0.259)	Acc@1 100.00 ( 26.87)	Acc@5 100.00 ( 50.48)
+Correct  23  total  4094
+Test: [ 9599/28634]	Time  0.082 ( 0.259)	Acc@1   0.00 ( 26.84)	Acc@5 100.00 ( 50.45)
+Correct  23  total  4186
+Test: [ 9799/28634]	Time  0.066 ( 0.259)	Acc@1   0.00 ( 26.85)	Acc@5 100.00 ( 50.29)
+Correct  23  total  4283
+Test: [ 9999/28634]	Time  0.482 ( 0.260)	Acc@1   0.00 ( 26.82)	Acc@5   0.00 ( 50.17)
+Correct  23  total  4380
+Test: [10199/28634]	Time  0.053 ( 0.260)	Acc@1 100.00 ( 26.84)	Acc@5 100.00 ( 50.16)
+Correct  23  total  4469
+Test: [10599/28634]	Time  0.449 ( 0.260)	Acc@1   0.00 ( 26.92)	Acc@5   0.00 ( 50.17)
+Correct  26  total  4647
+Test: [10799/28634]	Time  0.490 ( 0.260)	Acc@1   0.00 ( 26.87)	Acc@5   0.00 ( 50.16)
+Correct  26  total  4738
+Test: [10999/28634]	Time  0.054 ( 0.260)	Acc@1 100.00 ( 26.90)	Acc@5 100.00 ( 50.16)
+Correct  27  total  4829
+Test: [11199/28634]	Time  0.051 ( 0.260)	Acc@1   0.00 ( 26.84)	Acc@5 100.00 ( 50.14)
+Correct  27  total  4912
+Test: [11399/28634]	Time  0.052 ( 0.260)	Acc@1 100.00 ( 26.84)	Acc@5 100.00 ( 50.21)
+Correct  27  total  4988
+Test: [11599/28634]	Time  0.048 ( 0.259)	Acc@1   0.00 ( 26.87)	Acc@5 100.00 ( 50.27)
+Correct  27  total  5070
+Test: [11799/28634]	Time  0.045 ( 0.259)	Acc@1   0.00 ( 26.93)	Acc@5 100.00 ( 50.32)
+Correct  27  total  5156
+Test: [11999/28634]	Time  0.044 ( 0.259)	Acc@1 100.00 ( 26.96)	Acc@5 100.00 ( 50.32)
+Correct  27  total  5239
+Test: [12399/28634]	Time  0.440 ( 0.259)	Acc@1   0.00 ( 26.94)	Acc@5   0.00 ( 50.39)
+Correct  27  total  5401
+Test: [12599/28634]	Time  0.472 ( 0.259)	Acc@1   0.00 ( 26.92)	Acc@5   0.00 ( 50.31)
+Correct  27  total  5499
+Test: [12799/28634]	Time  0.047 ( 0.259)	Acc@1 100.00 ( 26.91)	Acc@5 100.00 ( 50.36)
+Correct  27  total  5576
+Test: [12999/28634]	Time  0.465 ( 0.259)	Acc@1   0.00 ( 26.88)	Acc@5   0.00 ( 50.35)
+Correct  27  total  5664
+Test: [13199/28634]	Time  0.045 ( 0.259)	Acc@1 100.00 ( 26.82)	Acc@5 100.00 ( 50.34)
+Correct  27  total  5750
+Test: [13399/28634]	Time  0.439 ( 0.259)	Acc@1   0.00 ( 26.85)	Acc@5   0.00 ( 50.40)
+Correct  27  total  5823
+Test: [13599/28634]	Time  0.066 ( 0.258)	Acc@1   0.00 ( 26.85)	Acc@5 100.00 ( 50.42)
+Correct  28  total  5906
+Test: [13799/28634]	Time  0.050 ( 0.258)	Acc@1   0.00 ( 26.86)	Acc@5 100.00 ( 50.46)
+Correct  29  total  5984
+Test: [14199/28634]	Time  0.454 ( 0.258)	Acc@1   0.00 ( 26.85)	Acc@5   0.00 ( 50.46)
+Correct  31  total  6161
+Test: [14399/28634]	Time  0.444 ( 0.259)	Acc@1   0.00 ( 26.85)	Acc@5   0.00 ( 50.42)
+Correct  31  total  6253
+Test: [14599/28634]	Time  0.507 ( 0.259)	Acc@1   0.00 ( 26.87)	Acc@5   0.00 ( 50.40)
+Correct  32  total  6343
+Test: [14799/28634]	Time  0.055 ( 0.259)	Acc@1   0.00 ( 26.82)	Acc@5 100.00 ( 50.41)
+Correct  32  total  6430
+Test: [14999/28634]	Time  0.048 ( 0.258)	Acc@1 100.00 ( 26.83)	Acc@5 100.00 ( 50.53)
+Correct  32  total  6496
+Test: [15199/28634]	Time  0.460 ( 0.258)	Acc@1   0.00 ( 26.83)	Acc@5   0.00 ( 50.58)
+Correct  32  total  6578
+Test: [15399/28634]	Time  0.442 ( 0.258)	Acc@1   0.00 ( 26.85)	Acc@5   0.00 ( 50.59)
+Correct  32  total  6665
+Test: [15599/28634]	Time  0.044 ( 0.258)	Acc@1 100.00 ( 26.87)	Acc@5 100.00 ( 50.57)
+Correct  32  total  6755
+Test: [15799/28634]	Time  0.138 ( 0.258)	Acc@1 100.00 ( 26.88)	Acc@5 100.00 ( 50.57)
+Correct  33  total  6837
+Test: [15999/28634]	Time  0.056 ( 0.258)	Acc@1   0.00 ( 26.92)	Acc@5 100.00 ( 50.57)
+Correct  33  total  6924
+Test: [16199/28634]	Time  0.054 ( 0.259)	Acc@1   0.00 ( 26.86)	Acc@5 100.00 ( 50.56)
+Correct  33  total  7009
+Test: [16399/28634]	Time  0.451 ( 0.259)	Acc@1   0.00 ( 26.85)	Acc@5   0.00 ( 50.49)
+Correct  33  total  7100
+Test: [16599/28634]	Time  0.046 ( 0.259)	Acc@1   0.00 ( 26.87)	Acc@5 100.00 ( 50.47)
+Correct  33  total  7189
+Test: [16799/28634]	Time  0.442 ( 0.259)	Acc@1   0.00 ( 26.81)	Acc@5   0.00 ( 50.46)
+Correct  34  total  7279
+Test: [16999/28634]	Time  0.045 ( 0.259)	Acc@1 100.00 ( 26.84)	Acc@5 100.00 ( 50.49)
+Correct  34  total  7361
+Test: [17199/28634]	Time  0.044 ( 0.259)	Acc@1   0.00 ( 26.82)	Acc@5 100.00 ( 50.46)
+Correct  34  total  7447
+Test: [17399/28634]	Time  0.440 ( 0.260)	Acc@1   0.00 ( 26.77)	Acc@5   0.00 ( 50.42)
+Correct  34  total  7538
+Test: [17599/28634]	Time  0.503 ( 0.260)	Acc@1   0.00 ( 26.71)	Acc@5   0.00 ( 50.35)
+Correct  34  total  7636
+Test: [17799/28634]	Time  0.060 ( 0.260)	Acc@1   0.00 ( 26.68)	Acc@5 100.00 ( 50.40)
+Correct  36  total  7718
+Test: [17999/28634]	Time  0.455 ( 0.260)	Acc@1   0.00 ( 26.67)	Acc@5   0.00 ( 50.32)
+Correct  36  total  7817
+Test: [18599/28634]	Time  0.486 ( 0.261)	Acc@1   0.00 ( 26.68)	Acc@5   0.00 ( 50.37)
+Correct  38  total  8067
+Test: [18799/28634]	Time  0.057 ( 0.261)	Acc@1 100.00 ( 26.60)	Acc@5 100.00 ( 50.33)
+Correct  38  total  8161
+Test: [18999/28634]	Time  0.089 ( 0.261)	Acc@1 100.00 ( 26.65)	Acc@5 100.00 ( 50.33)
+Correct  38  total  8248
+Test: [19199/28634]	Time  0.053 ( 0.261)	Acc@1 100.00 ( 26.58)	Acc@5 100.00 ( 50.28)
+Correct  39  total  8348
+Test: [19399/28634]	Time  0.528 ( 0.261)	Acc@1   0.00 ( 26.60)	Acc@5   0.00 ( 50.32)
+Correct  40  total  8427
+Test: [19599/28634]	Time  0.463 ( 0.261)	Acc@1   0.00 ( 26.58)	Acc@5   0.00 ( 50.28)
+Correct  40  total  8521
+Test: [19799/28634]	Time  0.450 ( 0.261)	Acc@1   0.00 ( 26.55)	Acc@5   0.00 ( 50.26)
+Correct  40  total  8609
+Test: [19999/28634]	Time  0.080 ( 0.261)	Acc@1   0.00 ( 26.54)	Acc@5 100.00 ( 50.30)
+Correct  41  total  8696
+Test: [20199/28634]	Time  0.043 ( 0.261)	Acc@1 100.00 ( 26.54)	Acc@5 100.00 ( 50.34)
+Correct  41  total  8774
+Test: [20399/28634]	Time  0.111 ( 0.261)	Acc@1 100.00 ( 26.57)	Acc@5 100.00 ( 50.34)
+Correct  41  total  8861
+Test: [20599/28634]	Time  0.489 ( 0.261)	Acc@1   0.00 ( 26.57)	Acc@5   0.00 ( 50.43)
+Correct  41  total  8930
+Test: [20999/28634]	Time  0.083 ( 0.261)	Acc@1 100.00 ( 26.61)	Acc@5 100.00 ( 50.47)
+Correct  42  total  9097
+Test: [21199/28634]	Time  0.451 ( 0.261)	Acc@1   0.00 ( 26.61)	Acc@5   0.00 ( 50.45)
+Correct  42  total  9190
+Test: [21399/28634]	Time  0.440 ( 0.261)	Acc@1   0.00 ( 26.59)	Acc@5   0.00 ( 50.43)
+Correct  42  total  9281
+Test: [21599/28634]	Time  0.045 ( 0.262)	Acc@1   0.00 ( 26.59)	Acc@5 100.00 ( 50.38)
+Correct  42  total  9374
+Test: [21799/28634]	Time  0.469 ( 0.262)	Acc@1   0.00 ( 26.54)	Acc@5   0.00 ( 50.32)
+Correct  44  total  9474
+Test: [21999/28634]	Time  0.447 ( 0.262)	Acc@1   0.00 ( 26.52)	Acc@5   0.00 ( 50.29)
+Correct  44  total  9565
+Test: [22199/28634]	Time  0.052 ( 0.262)	Acc@1 100.00 ( 26.48)	Acc@5 100.00 ( 50.25)
+Correct  44  total  9661
+Test: [22399/28634]	Time  0.063 ( 0.262)	Acc@1 100.00 ( 26.48)	Acc@5 100.00 ( 50.21)
+Correct  46  total  9756
+Test: [22599/28634]	Time  0.450 ( 0.262)	Acc@1   0.00 ( 26.48)	Acc@5   0.00 ( 50.17)
+Correct  46  total  9846
+Test: [22799/28634]	Time  0.482 ( 0.262)	Acc@1   0.00 ( 26.47)	Acc@5   0.00 ( 50.17)
+Correct  47  total  9934
+Test: [22999/28634]	Time  0.497 ( 0.263)	Acc@1   0.00 ( 26.43)	Acc@5   0.00 ( 50.14)
+Correct  48  total  10027
+Test: [23199/28634]	Time  0.045 ( 0.263)	Acc@1   0.00 ( 26.40)	Acc@5 100.00 ( 50.10)
+Correct  48  total  10120
+Test: [23399/28634]	Time  0.049 ( 0.263)	Acc@1 100.00 ( 26.39)	Acc@5 100.00 ( 50.11)
+Correct  48  total  10207
+Test: [23599/28634]	Time  0.440 ( 0.263)	Acc@1   0.00 ( 26.36)	Acc@5   0.00 ( 50.07)
+Correct  48  total  10307
+Test: [23799/28634]	Time  0.069 ( 0.263)	Acc@1   0.00 ( 26.40)	Acc@5 100.00 ( 50.12)
+Correct  50  total  10387
+Test: [23999/28634]	Time  0.054 ( 0.263)	Acc@1 100.00 ( 26.41)	Acc@5 100.00 ( 50.14)
+Correct  50  total  10470
+Test: [24399/28634]	Time  0.055 ( 0.263)	Acc@1 100.00 ( 26.43)	Acc@5 100.00 ( 50.13)
+Correct  52  total  10650
+Test: [24599/28634]	Time  0.045 ( 0.262)	Acc@1 100.00 ( 26.50)	Acc@5 100.00 ( 50.23)
+Correct  52  total  10716
+Test: [24799/28634]	Time  0.447 ( 0.262)	Acc@1   0.00 ( 26.45)	Acc@5   0.00 ( 50.17)
+Correct  53  total  10816
+Test: [24999/28634]	Time  0.441 ( 0.262)	Acc@1   0.00 ( 26.46)	Acc@5   0.00 ( 50.18)
+Correct  53  total  10900
+Test: [25199/28634]	Time  0.083 ( 0.262)	Acc@1   0.00 ( 26.46)	Acc@5 100.00 ( 50.17)
+Correct  54  total  10988
+Test: [25399/28634]	Time  0.494 ( 0.263)	Acc@1   0.00 ( 26.44)	Acc@5   0.00 ( 50.11)
+Correct  54  total  11088
+Test: [25599/28634]	Time  0.058 ( 0.263)	Acc@1 100.00 ( 26.45)	Acc@5 100.00 ( 50.12)
+Correct  57  total  11171
+Test: [25799/28634]	Time  0.476 ( 0.263)	Acc@1   0.00 ( 26.45)	Acc@5   0.00 ( 50.13)
+Correct  57  total  11260
+Test: [25999/28634]	Time  0.044 ( 0.263)	Acc@1 100.00 ( 26.47)	Acc@5 100.00 ( 50.12)
+Correct  57  total  11348
+Test: [26199/28634]	Time  0.437 ( 0.262)	Acc@1   0.00 ( 26.47)	Acc@5   0.00 ( 50.15)
+Correct  58  total  11428
+Test: [26399/28634]	Time  0.048 ( 0.262)	Acc@1 100.00 ( 26.46)	Acc@5 100.00 ( 50.14)
+Correct  58  total  11519
+Test: [26599/28634]	Time  0.460 ( 0.262)	Acc@1   0.00 ( 26.49)	Acc@5   0.00 ( 50.17)
+Correct  58  total  11596
+Test: [26799/28634]	Time  0.435 ( 0.262)	Acc@1   0.00 ( 26.48)	Acc@5   0.00 ( 50.15)
+Correct  58  total  11688
+Test: [26999/28634]	Time  0.065 ( 0.262)	Acc@1 100.00 ( 26.49)	Acc@5 100.00 ( 50.15)
+Correct  58  total  11772
+Test: [27399/28634]	Time  0.450 ( 0.262)	Acc@1   0.00 ( 26.49)	Acc@5   0.00 ( 50.11)
+Correct  59  total  11953
+Test: [27599/28634]	Time  0.072 ( 0.262)	Acc@1   0.00 ( 26.49)	Acc@5 100.00 ( 50.13)
+Correct  59  total  12032
+Test: [27799/28634]	Time  0.453 ( 0.262)	Acc@1   0.00 ( 26.46)	Acc@5   0.00 ( 50.14)
+Correct  60  total  12121
+Test: [27999/28634]	Time  0.459 ( 0.262)	Acc@1   0.00 ( 26.46)	Acc@5   0.00 ( 50.14)
+Correct  60  total  12209
+Test: [28199/28634]	Time  0.503 ( 0.262)	Acc@1   0.00 ( 26.48)	Acc@5   0.00 ( 50.15)
+Correct  61  total  12294
+Test: [28399/28634]	Time  0.456 ( 0.262)	Acc@1   0.00 ( 26.49)	Acc@5   0.00 ( 50.19)
+Correct  61  total  12374
+Test: [28599/28634]	Time  0.045 ( 0.262)	Acc@1   0.00 ( 26.50)	Acc@5 100.00 ( 50.22)
+Correct  62  total  12456
+ *  Acc@1 26.475 Acc@5 50.205
+
+		 [set_id] 		 Top-1 acc.
+eurosat	
+

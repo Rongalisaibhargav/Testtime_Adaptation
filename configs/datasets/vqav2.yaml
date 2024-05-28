@@ -1,0 +1,6 @@
+DATASET:
+  NAME: "VQAv2"
+  SPLIT: "val_ab"
+  ROOT: "/raid/biplab/hassan/datasets/vqa_abs"
+  DATA: "VQAab"
+  TPT: 'eurosat'

@@ -30,7 +30,13 @@ MODEL:
 
 TRAINER:
   MAPLE:
-    N_CTX: 2
-    CTX_INIT: "a photo of a"
+    N_CTX: 3
+    CTX_INIT: "A photo of"
     PREC: "fp16"
     PROMPT_DEPTH: 3
+
+TPT:
+  LOADER: True
+  LR: 9e-1
+  RUN: True
+  TTA_STEPS: 1

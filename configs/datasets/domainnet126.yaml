@@ -1,6 +1,0 @@
-DATASET:
-  NAME: "DomainNet"
-  NUM_LABELED : 4000
-  ROOT: "/raid/biplab/hassan/PromptSRC/data/DomainNet-126"
-  SOURCE_DOMAINS: ["real"]
-  TARGET_DOMAINS: ["real"]

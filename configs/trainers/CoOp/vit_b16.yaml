@@ -26,4 +26,16 @@ TRAIN:
 
 MODEL:
   BACKBONE:
-    NAME: "ViT-B/16"
+    NAME: "ViT-B/32"
+
+TRAINER:
+  COOP:
+    N_CTX: 4
+    CTX_INIT: "A photo of"
+    PREC: "fp32"
+
+TPT:
+  LOADER: True
+  LR: 4e-4
+  RUN: True
+  TTA_STEPS: 1
